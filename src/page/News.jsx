@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Car,
   Calendar,
@@ -14,110 +14,19 @@ import {
   TrendingUp,
 } from "lucide-react";
 import Header from "../components/Menu";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchNews } from "../thunk/newsThunk";
 
 const News = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [likedPosts, setLikedPosts] = useState(new Set());
+  const newsData = useSelector((state) => state.newsData.newsData || []);
 
-  const newsArticles = [
-    {
-      id: 1,
-      title: "Toyota Fortuner 2024 - Những nâng cấp đáng chú ý",
-      category: "models",
-      excerpt:
-        "Khám phá những thay đổi mới nhất trên Toyota Fortuner 2024 với công nghệ hiện đại và thiết kế được cải tiến.",
-      image: "/api/placeholder/600/400",
-      author: "Nguyễn Văn An",
-      date: "2024-07-10",
-      readTime: "5 phút đọc",
-      views: 2150,
-      likes: 89,
-      comments: 23,
-      featured: true,
-      tags: ["Toyota", "Fortuner", "2024", "Nâng cấp"],
-    },
-    {
-      id: 2,
-      title: "Bảo dưỡng xe Toyota Fortuner - Hướng dẫn chi tiết",
-      category: "maintenance",
-      excerpt:
-        "Tất cả những gì bạn cần biết về việc bảo dưỡng Toyota Fortuner để đảm bảo hiệu suất tối ưu.",
-      image: "/api/placeholder/600/400",
-      author: "Trần Thị Lan",
-      date: "2024-07-08",
-      readTime: "8 phút đọc",
-      views: 1890,
-      likes: 67,
-      comments: 15,
-      featured: false,
-      tags: ["Bảo dưỡng", "Tips", "Hướng dẫn"],
-    },
-    {
-      id: 3,
-      title: "So sánh Toyota Fortuner với các đối thủ cùng phân khúc",
-      category: "comparison",
-      excerpt:
-        "Phân tích chi tiết ưu nhược điểm của Toyota Fortuner so với Ford Everest, Mitsubishi Pajero Sport.",
-      image: "/api/placeholder/600/400",
-      author: "Lê Minh Hoàng",
-      date: "2024-07-05",
-      readTime: "12 phút đọc",
-      views: 3420,
-      likes: 156,
-      comments: 45,
-      featured: true,
-      tags: ["So sánh", "SUV", "Phân khúc"],
-    },
-    {
-      id: 4,
-      title: "Xu hướng thị trường ô tô SUV 7 chỗ tại Việt Nam",
-      category: "market",
-      excerpt:
-        "Báo cáo về tình hình thị trường SUV 7 chỗ và vị thế của Toyota Fortuner trong phân khúc.",
-      image: "/api/placeholder/600/400",
-      author: "Phạm Đức Minh",
-      date: "2024-07-03",
-      readTime: "6 phút đọc",
-      views: 2760,
-      likes: 94,
-      comments: 28,
-      featured: false,
-      tags: ["Thị trường", "SUV", "Báo cáo"],
-    },
-    {
-      id: 5,
-      title: "Trải nghiệm off-road cùng Toyota Fortuner",
-      category: "experience",
-      excerpt:
-        "Hành trình khám phá địa hình khó khăn cùng Toyota Fortuner và những điều bất ngờ.",
-      image: "/api/placeholder/600/400",
-      author: "Võ Thanh Tùng",
-      date: "2024-07-01",
-      readTime: "10 phút đọc",
-      views: 1650,
-      likes: 78,
-      comments: 19,
-      featured: false,
-      tags: ["Off-road", "Trải nghiệm", "Phiêu lưu"],
-    },
-    {
-      id: 6,
-      title: "Công nghệ an toàn trên Toyota Fortuner",
-      category: "technology",
-      excerpt:
-        "Tìm hiểu về các hệ thống an toàn tiên tiến được trang bị trên Toyota Fortuner.",
-      image: "/api/placeholder/600/400",
-      author: "Ngô Thị Mai",
-      date: "2024-06-28",
-      readTime: "7 phút đọc",
-      views: 2100,
-      likes: 112,
-      comments: 31,
-      featured: false,
-      tags: ["Công nghệ", "An toàn", "Tính năng"],
-    },
-  ];
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchNews());
+  }, [dispatch]);
 
   const categories = [
     { id: "all", name: "Tất cả", icon: TrendingUp },
@@ -129,7 +38,7 @@ const News = () => {
     { id: "technology", name: "Công nghệ", icon: Filter },
   ];
 
-  const filteredArticles = newsArticles.filter((article) => {
+  const filteredArticles = newsData.filter((article) => {
     const matchesCategory =
       selectedCategory === "all" || article.category === selectedCategory;
     const matchesSearch =
@@ -188,7 +97,7 @@ const News = () => {
                 placeholder="Tìm kiếm tin tức..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-xl text-gray-200 focus:outline-none focus:ring-2 focus:ring-white"
+                className="w-full pl-10 pr-4 py-3 rounded-xl text-gray-200 focus:outline-none focus:ring-2 focus:ring-white bg-white bg-opacity-10"
               />
             </div>
           </div>
@@ -422,7 +331,7 @@ const News = () => {
             <input
               type="email"
               placeholder="Nhập email của bạn"
-              className="flex-1 px-4 py-3 rounded-xl text-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500"
+              className="flex-1 px-4 py-3 rounded-xl text-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 bg-white bg-opacity-10"
             />
             <button className="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-xl font-medium transition-colors duration-300">
               Đăng ký

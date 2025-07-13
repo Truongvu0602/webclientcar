@@ -29,6 +29,9 @@ const Header = ({ isMenuOpen, setIsMenuOpen }) => {
             <Link to="/contact" className="text-gray-700 hover:text-red-600">
               Liên hệ
             </Link>
+            <Link to="/auth" className="text-gray-700 hover:text-red-600">
+              Đăng nhập
+            </Link>
           </nav>
 
           <button
@@ -65,6 +68,9 @@ const Header = ({ isMenuOpen, setIsMenuOpen }) => {
               className="block text-gray-700 hover:text-red-600"
             >
               Liên hệ
+            </Link>
+            <Link to="/auth" className="block text-gray-700 hover:text-red-600">
+              Đăng nhập
             </Link>
           </div>
         </div>

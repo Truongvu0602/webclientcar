@@ -6,6 +6,7 @@ import Models from "./page/Models";
 import News from "./page/News";
 
 import Contact from "./page/Contact";
+import Auth from "./page/Auth";
 const App = () => {
   return (
     <div>
@@ -14,6 +15,7 @@ const App = () => {
         <Route path="/models" element={<Models />} />
         <Route path="/news" element={<News />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/auth" element={<Auth />} />
       </Routes>
     </div>
   );

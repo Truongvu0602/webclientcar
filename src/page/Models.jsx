@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Car,
   Fuel,
@@ -10,151 +10,42 @@ import {
   ArrowRight,
 } from "lucide-react";
 import Header from "../components/Menu";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCarModel } from "../thunk/carModelThunk";
 
 const Models = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [hoveredCard, setHoveredCard] = useState(null);
+  const dispatch = useDispatch();
+  const carModel = useSelector((state) => state.carModel.carModel || []);
 
-  const carModels = [
-    {
-      id: 1,
-      name: "Fortuner 2.4G 4x2 MT",
-      category: "manual",
-      price: "1.026.000.000 VNĐ",
-      image: "/api/placeholder/400/300",
-      features: [
-        "Động cơ 2.4L",
-        "Hộp số sàn",
-        "7 chỗ ngồi",
-        "Dẫn động cầu sau",
-      ],
-      fuel: "7.8L/100km",
-      seats: 7,
-      transmission: "Số sàn",
-      year: 2024,
-      rating: 4.5,
-      highlight: "Phiên bản cơ bản",
-    },
-    {
-      id: 2,
-      name: "Fortuner 2.4G 4x2 AT",
-      category: "automatic",
-      price: "1.094.000.000 VNĐ",
-      image: "/api/placeholder/400/300",
-      features: [
-        "Động cơ 2.4L",
-        "Hộp số tự động",
-        "7 chỗ ngồi",
-        "Dẫn động cầu sau",
-      ],
-      fuel: "8.2L/100km",
-      seats: 7,
-      transmission: "Số tự động",
-      year: 2024,
-      rating: 4.7,
-      highlight: "Tiện nghi cao",
-    },
-    {
-      id: 3,
-      name: "Fortuner 2.8V 4x4 AT",
-      category: "premium",
-      price: "1.354.000.000 VNĐ",
-      image: "/api/placeholder/400/300",
-      features: [
-        "Động cơ 2.8L Turbo",
-        "Hộp số tự động",
-        "7 chỗ ngồi",
-        "Dẫn động 4 bánh",
-      ],
-      fuel: "8.8L/100km",
-      seats: 7,
-      transmission: "Số tự động",
-      year: 2024,
-      rating: 4.8,
-      highlight: "Cao cấp nhất",
-    },
-    {
-      id: 4,
-      name: "Fortuner Legender 2.8V 4x4",
-      category: "premium",
-      price: "1.434.000.000 VNĐ",
-      image: "/api/placeholder/400/300",
-      features: [
-        "Động cơ 2.8L Turbo",
-        "Hộp số tự động",
-        "7 chỗ ngồi",
-        "Dẫn động 4 bánh",
-      ],
-      fuel: "8.8L/100km",
-      seats: 7,
-      transmission: "Số tự động",
-      year: 2024,
-      rating: 4.9,
-      highlight: "Thể thao đẳng cấp",
-    },
-    {
-      id: 5,
-      name: "Fortuner 2.4G 4x2 AT Premium",
-      category: "automatic",
-      price: "1.177.000.000 VNĐ",
-      image: "/api/placeholder/400/300",
-      features: [
-        "Động cơ 2.4L",
-        "Hộp số tự động",
-        "7 chỗ ngồi",
-        "Dẫn động cầu sau",
-      ],
-      fuel: "8.2L/100km",
-      seats: 7,
-      transmission: "Số tự động",
-      year: 2024,
-      rating: 4.6,
-      highlight: "Trang bị nâng cao",
-    },
-    {
-      id: 6,
-      name: "Fortuner 2.8V 4x2 AT",
-      category: "premium",
-      price: "1.288.000.000 VNĐ",
-      image: "/api/placeholder/400/300",
-      features: [
-        "Động cơ 2.8L Turbo",
-        "Hộp số tự động",
-        "7 chỗ ngồi",
-        "Dẫn động cầu sau",
-      ],
-      fuel: "8.5L/100km",
-      seats: 7,
-      transmission: "Số tự động",
-      year: 2024,
-      rating: 4.7,
-      highlight: "Mạnh mẽ & tiết kiệm",
-    },
-  ];
+  useEffect(() => {
+    dispatch(fetchCarModel());
+  }, [dispatch]);
 
   const categories = [
-    { id: "all", name: "Tất cả", count: carModels.length },
+    { id: "all", name: "Tất cả", count: carModel.length },
     {
       id: "manual",
       name: "Số sàn",
-      count: carModels.filter((car) => car.category === "manual").length,
+      count: carModel.filter((car) => car.category === "manual").length,
     },
     {
       id: "automatic",
       name: "Số tự động",
-      count: carModels.filter((car) => car.category === "automatic").length,
+      count: carModel.filter((car) => car.category === "automatic").length,
     },
     {
       id: "premium",
       name: "Cao cấp",
-      count: carModels.filter((car) => car.category === "premium").length,
+      count: carModel.filter((car) => car.category === "premium").length,
     },
   ];
 
   const filteredModels =
     selectedCategory === "all"
-      ? carModels
-      : carModels.filter((car) => car.category === selectedCategory);
+      ? carModel
+      : carModel.filter((car) => car.category === selectedCategory);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -162,27 +53,25 @@ const Models = () => {
 
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-red-600 to-red-800 text-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">
-              Dòng xe <span className="text-yellow-400">Fortuner</span>
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 opacity-90">
-              Khám phá sức mạnh và đẳng cấp của Toyota Fortuner
-            </p>
-            <div className="flex justify-center space-x-8 text-sm md:text-base">
-              <div className="flex items-center">
-                <Car className="w-5 h-5 mr-2" />
-                <span>6 Phiên bản</span>
-              </div>
-              <div className="flex items-center">
-                <Star className="w-5 h-5 mr-2" />
-                <span>4.7/5 Đánh giá</span>
-              </div>
-              <div className="flex items-center">
-                <Users className="w-5 h-5 mr-2" />
-                <span>7 Chỗ ngồi</span>
-              </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4">
+            Dòng xe <span className="text-yellow-400">Fortuner</span>
+          </h1>
+          <p className="text-xl md:text-2xl mb-8 opacity-90">
+            Khám phá sức mạnh và đẳng cấp của Toyota Fortuner
+          </p>
+          <div className="flex justify-center space-x-8 text-sm md:text-base">
+            <div className="flex items-center">
+              <Car className="w-5 h-5 mr-2" />
+              <span>{carModel.length} Phiên bản</span>
+            </div>
+            <div className="flex items-center">
+              <Star className="w-5 h-5 mr-2" />
+              <span>4.7/5 Đánh giá</span>
+            </div>
+            <div className="flex items-center">
+              <Users className="w-5 h-5 mr-2" />
+              <span>7 Chỗ ngồi</span>
             </div>
           </div>
         </div>
@@ -230,10 +119,11 @@ const Models = () => {
                     src={car.image}
                     alt={car.name}
                     className="w-full h-48 object-cover transition-transform duration-300 hover:scale-110"
+                    onError={(e) => {
+                      e.target.src =
+                        "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=400&h=250&fit=crop&crop=center";
+                    }}
                   />
-                  <div className="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                    {car.highlight}
-                  </div>
                   <div className="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm">
                     {car.year}
                   </div>
@@ -245,12 +135,6 @@ const Models = () => {
                     <h3 className="text-xl font-bold text-gray-900">
                       {car.name}
                     </h3>
-                    <div className="flex items-center">
-                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                      <span className="text-sm text-gray-600 ml-1">
-                        {car.rating}
-                      </span>
-                    </div>
                   </div>
 
                   <div className="text-2xl font-bold text-red-600 mb-4">
@@ -261,31 +145,17 @@ const Models = () => {
                   <div className="grid grid-cols-3 gap-4 mb-6">
                     <div className="text-center">
                       <Fuel className="w-5 h-5 text-gray-400 mx-auto mb-1" />
-                      <p className="text-xs text-gray-600">{car.fuel}</p>
+                      <p className="text-xs text-gray-600">
+                        {car.engine || "N/A"}
+                      </p>
                     </div>
                     <div className="text-center">
                       <Users className="w-5 h-5 text-gray-400 mx-auto mb-1" />
-                      <p className="text-xs text-gray-600">{car.seats} chỗ</p>
+                      <p className="text-xs text-gray-600">7 chỗ</p>
                     </div>
                     <div className="text-center">
                       <Settings className="w-5 h-5 text-gray-400 mx-auto mb-1" />
-                      <p className="text-xs text-gray-600">
-                        {car.transmission}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Features */}
-                  <div className="mb-6">
-                    <div className="flex flex-wrap gap-2">
-                      {car.features.slice(0, 3).map((feature, index) => (
-                        <span
-                          key={index}
-                          className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full"
-                        >
-                          {feature}
-                        </span>
-                      ))}
+                      <p className="text-xs text-gray-600">{car.gear}</p>
                     </div>
                   </div>
 

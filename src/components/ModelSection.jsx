@@ -1,7 +1,20 @@
 import React from "react";
 import { Star } from "lucide-react";
 
-const ModelSection = ({ models, selectedModel, setSelectedModel }) => {
+const ModelSection = ({
+  carModel,
+  carModelFeaturn,
+  selectedModel,
+  setSelectedModel,
+}) => {
+  const selected = carModel.find((item) => item.year === Number(selectedModel));
+  if (!selected) return null;
+
+  // 🔧 Dùng model_id thay vì model_year
+  const selectedFeatures = carModelFeaturn.filter(
+    (f) => f.model_id === selected.id
+  );
+
   return (
     <section id="models" className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
@@ -14,74 +27,84 @@ const ModelSection = ({ models, selectedModel, setSelectedModel }) => {
           </p>
         </div>
 
+        {/* Nút chọn năm */}
         <div className="flex justify-center mb-8">
           <div className="bg-white rounded-lg p-1 shadow-md">
-            {Object.keys(models).map((year) => (
+            {carModel.map((model) => (
               <button
-                key={year}
-                onClick={() => setSelectedModel(year)}
+                key={model.year}
+                onClick={() => setSelectedModel(String(model.year))}
                 className={`px-6 py-3 rounded-md font-semibold transition-colors ${
-                  selectedModel === year
+                  String(selectedModel) === String(model.year)
                     ? "bg-red-600 text-white"
                     : "text-gray-600 hover:text-red-600"
                 }`}
               >
-                {year}
+                {model.year}
               </button>
             ))}
           </div>
         </div>
 
+        {/* Thông tin chi tiết */}
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           <div className="md:flex">
             <div className="md:w-1/2">
               <img
-                src={models[selectedModel].image}
-                alt={models[selectedModel].name}
+                src={selected.image}
+                alt={selected.name}
                 className="w-full h-64 md:h-full object-cover"
               />
             </div>
             <div className="md:w-1/2 p-8">
               <h3 className="text-3xl font-bold text-gray-800 mb-2">
-                {models[selectedModel].name}
+                {selected.name}
               </h3>
               <p className="text-2xl text-red-600 font-bold mb-6">
-                {models[selectedModel].price}
+                {selected.price}
               </p>
 
               <div className="space-y-4 mb-8">
                 <div className="flex items-center space-x-3">
                   <div className="w-4 h-4 bg-red-600 rounded-full"></div>
                   <span className="text-gray-700">
-                    <strong>Động cơ:</strong> {models[selectedModel].engine}
+                    <strong>Động cơ:</strong> {selected.engine}
                   </span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="w-4 h-4 bg-red-600 rounded-full"></div>
                   <span className="text-gray-700">
-                    <strong>Công suất:</strong> {models[selectedModel].power}
+                    <strong>Công suất:</strong> {selected.power}
                   </span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="w-4 h-4 bg-red-600 rounded-full"></div>
                   <span className="text-gray-700">
-                    <strong>Hộp số:</strong>{" "}
-                    {models[selectedModel].transmission}
+                    <strong>Hộp số:</strong> {selected.transmission}
                   </span>
                 </div>
               </div>
 
+              {/* Tính năng nổi bật */}
               <div className="mb-8">
                 <h4 className="text-xl font-bold text-gray-800 mb-4">
                   Tính năng nổi bật:
                 </h4>
                 <div className="grid grid-cols-2 gap-2">
-                  {models[selectedModel].features.map((feature, index) => (
-                    <div key={index} className="flex items-center space-x-2">
-                      <Star className="w-4 h-4 text-red-600 flex-shrink-0" />
-                      <span className="text-sm text-gray-600">{feature}</span>
-                    </div>
-                  ))}
+                  {selectedFeatures.length > 0 ? (
+                    selectedFeatures.map((f) => (
+                      <div key={f.id} className="flex items-center space-x-2">
+                        <Star className="w-4 h-4 text-red-600 flex-shrink-0" />
+                        <span className="text-sm text-gray-600">
+                          {f.feature}
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-gray-500 italic col-span-2">
+                      Không có dữ liệu tính năng cho phiên bản này.
+                    </p>
+                  )}
                 </div>
               </div>
 
